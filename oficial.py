@@ -6,10 +6,23 @@ def main(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
+    # Función para redirigir a reportes.py
+    def go_to_reportes(e):
+        page.controls.clear()  # Limpiar la página actual
+        from reportes import main as reportes_main  # Importar aquí para evitar circularidad
+        reportes_main(page, go_to_oficial)  # Pasar la función de regreso
+        page.update()
+
+    # Función para regresar a oficial.py
+    def go_to_oficial():
+        page.controls.clear()
+        main(page)  # Recargar la interfaz de oficial.py
+        page.update()
+
     buttons = [
-        "Registrar nuevo delito",
-        "Descargar Historial de reportes",
-        "Editar reportes"
+        ("Registrar nuevo delito", go_to_reportes),
+        ("Descargar historial de reportes", lambda e: print("Descargar historial")),
+        ("Editar reportes", lambda e: print("Editar reportes"))
     ]
 
     button_widgets = [
@@ -18,14 +31,15 @@ def main(page: ft.Page):
             height=60,
             width=250,
             style=ft.ButtonStyle(
-                bgcolor={"": "white", "hovered": "black"},  # Blanco normal, negro en hover
-                color={"": "black", "hovered": "white"},  # Negro normal, blanco en hover
+                bgcolor={"": "white", "hovered": "black"},
+                color={"": "black", "hovered": "white"},
                 shape=ft.RoundedRectangleBorder(radius=20),
                 side={"": ft.BorderSide(color="black", width=2), 
-                      "hovered": ft.BorderSide(color="white", width=2)}  # Borde negro normal, blanco en hover
-            )
+                      "hovered": ft.BorderSide(color="white", width=2)}
+            ),
+            on_click=on_click  # Asignar la función de clic
         )
-        for text in buttons
+        for text, on_click in buttons
     ]
 
     container = ft.Row(
