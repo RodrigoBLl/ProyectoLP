@@ -13,6 +13,13 @@ def main(page: ft.Page):
         reportes_main(page, go_to_oficial)  # Pasar la función de regreso
         page.update()
 
+    # Función para redirigir a editarReporte.py
+    def go_to_editar_reportes(e):
+        page.controls.clear()  # Limpiar la página actual
+        from editarReporte import main as editar_reportes_main  # Importar aquí para evitar circularidad
+        editar_reportes_main(page, go_to_oficial)  # Pasar la función de regreso
+        page.update()
+
     # Función para regresar a oficial.py
     def go_to_oficial():
         page.controls.clear()
@@ -22,7 +29,7 @@ def main(page: ft.Page):
     buttons = [
         ("Registrar nuevo delito", go_to_reportes),
         ("Descargar historial de reportes", lambda e: print("Descargar historial")),
-        ("Editar reportes", lambda e: print("Editar reportes"))
+        ("Editar reportes", go_to_editar_reportes)  # Asignar la función de redirección
     ]
 
     button_widgets = [
